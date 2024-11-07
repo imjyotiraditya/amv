@@ -54,6 +54,7 @@ const ETCO_TYPES = {
 };
 
 ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+    document.addEventListener(eventName, preventDefaults, false);
     dropZone.addEventListener(eventName, preventDefaults, false);
 });
 
@@ -62,16 +63,37 @@ function preventDefaults(e) {
     e.stopPropagation();
 }
 
-dropZone.addEventListener('drop', handleDrop);
+document.addEventListener('dragenter', () => dropZone.classList.add('highlight'), false);
+document.addEventListener('dragover', () => dropZone.classList.add('highlight'), false);
+document.addEventListener('dragleave', (e) => {
+    if (e.relatedTarget === null || !document.contains(e.relatedTarget)) {
+        dropZone.classList.remove('highlight');
+    }
+}, false);
+document.addEventListener('drop', (e) => {
+    dropZone.classList.remove('highlight');
+    handleDrop(e);
+});
+
+dropZone.addEventListener('dragenter', () => dropZone.classList.add('highlight'), false);
+dropZone.addEventListener('dragover', () => dropZone.classList.add('highlight'), false);
+dropZone.addEventListener('dragleave', () => dropZone.classList.remove('highlight'), false);
+dropZone.addEventListener('drop', (e) => {
+    dropZone.classList.remove('highlight');
+    handleDrop(e);
+});
+
 dropZone.addEventListener('click', () => fileInput.click());
 fileInput.addEventListener('change', handleFileSelect);
 
 function handleDrop(e) {
-    processFile(e.dataTransfer.files[0]);
+    const file = e.dataTransfer.files[0];
+    if (file) processFile(file);
 }
 
 function handleFileSelect(e) {
-    processFile(e.target.files[0]);
+    const file = e.target.files[0];
+    if (file) processFile(file);
 }
 
 async function processFile(file) {

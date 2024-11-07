@@ -19,6 +19,11 @@ body {
     background: #333;
 }
 
+#dropZone.highlight {
+    background-color: #333;
+    border-color: #888;
+}
+
 pre {
     white-space: pre-wrap;
     background: #1e1e1e;
