@@ -1,7 +1,6 @@
 const dropZone = document.getElementById('dropZone');
 const fileInput = document.getElementById('fileInput');
 const output = document.getElementById('output');
-const audioContext = new (window.AudioContext || window.webkitAudioContext)();
 
 const ID3v1_GENRES = [
     'Blues', 'Classic Rock', 'Country', 'Dance', 'Disco', 'Funk', 'Grunge', 'Hip-Hop',
@@ -131,15 +130,6 @@ async function processFile(file) {
                 metadata['FLAC'] = flacInfo;
             }
         }
-
-        // Get audio properties using Web Audio API
-        const audioBuffer = await audioContext.decodeAudioData(arrayBuffer);
-        metadata['Audio'] = {
-            'Duration': formatDuration(audioBuffer.duration),
-            'NumberOfChannels': audioBuffer.numberOfChannels,
-            'SampleRate': audioBuffer.sampleRate + ' Hz',
-            'Length': audioBuffer.length + ' samples'
-        };
 
         output.textContent = formatOutput(metadata);
     } catch (error) {
@@ -380,7 +370,6 @@ function formatOutput(metadata) {
         'ID3v1': metadata.ID3v1,
         'WAV': metadata.WAV,
         'OGG': metadata.OGG,
-        'Audio': metadata.Audio
     };
 
     for (const [section, data] of Object.entries(sections)) {
