@@ -239,119 +239,129 @@ async function parseOGG(arrayBuffer) {
 
 async function parseFLAC(arrayBuffer) {
     const view = new DataView(arrayBuffer);
-    const data = {
-        'FLAC': {},
-        'Vorbis': {}
-    };
+    const data = {};
 
-    let offset = 4;
+    // Check FLAC signature
+    const signature = String.fromCharCode(
+        view.getUint8(0),
+        view.getUint8(1),
+        view.getUint8(2),
+        view.getUint8(3)
+    );
+
+    if (signature !== 'fLaC') {
+        throw new Error('Invalid FLAC signature');
+    }
+
+    let offset = 4;  // Skip signature
+
+    // Process metadata blocks
     while (offset < arrayBuffer.byteLength) {
         const blockHeader = view.getUint8(offset);
-        const blockType = blockHeader & 0x7F;
         const isLast = (blockHeader & 0x80) !== 0;
+        const blockType = blockHeader & 0x7F;
 
+        // Get block size (24 bits)
         const blockSize = (view.getUint8(offset + 1) << 16) |
             (view.getUint8(offset + 2) << 8) |
             view.getUint8(offset + 3);
 
-        if (blockType === 0) {
-            data.FLAC['BlockSizeMin'] = view.getUint16(offset + 4, true);
-            data.FLAC['BlockSizeMax'] = view.getUint16(offset + 6, true);
+        offset += 4;  // Move past header
 
-            data.FLAC['FrameSizeMin'] = (view.getUint8(offset + 8) << 16) |
-                (view.getUint8(offset + 9) << 8) |
-                view.getUint8(offset + 10);
+        // Process different block types
+        switch (blockType) {
+            case 0:  // STREAMINFO block
+                if (!data.STREAMINFO) data.STREAMINFO = {};
 
-            data.FLAC['FrameSizeMax'] = (view.getUint8(offset + 11) << 16) |
-                (view.getUint8(offset + 12) << 8) |
-                view.getUint8(offset + 13);
+                // Process bit stream
+                data.STREAMINFO = {
+                    'BlockSizeMin': view.getUint16(offset, false),
+                    'BlockSizeMax': view.getUint16(offset + 2, false),
+                    'FrameSizeMin': (view.getUint8(offset + 4) << 16) |
+                        (view.getUint8(offset + 5) << 8) |
+                        view.getUint8(offset + 6),
+                    'FrameSizeMax': (view.getUint8(offset + 7) << 16) |
+                        (view.getUint8(offset + 8) << 8) |
+                        view.getUint8(offset + 9),
+                    'SampleRate': ((view.getUint8(offset + 10) << 12) |
+                        (view.getUint8(offset + 11) << 4) |
+                        (view.getUint8(offset + 12) >> 4)),
+                    'Channels': ((view.getUint8(offset + 12) >> 1) & 0x7) + 1,
+                    'BitsPerSample': (((view.getUint8(offset + 12) & 1) << 4) |
+                        (view.getUint8(offset + 13) >> 4)) + 1,
+                    'TotalSamples': ((BigInt(view.getUint8(offset + 13) & 0xF) << 32n) |
+                        BigInt(view.getUint8(offset + 14) << 24) |
+                        BigInt(view.getUint8(offset + 15) << 16) |
+                        BigInt(view.getUint8(offset + 16) << 8) |
+                        BigInt(view.getUint8(offset + 17))).toString(),
+                    'MD5Signature': Array.from(
+                        new Uint8Array(arrayBuffer.slice(offset + 18, offset + 34))
+                    ).map(b => b.toString(16).padStart(2, '0')).join('')
+                };
+                break;
 
-            const sampleRate = ((view.getUint8(offset + 14) << 12) |
-                (view.getUint8(offset + 15) << 4) |
-                (view.getUint8(offset + 16) >> 4));
-            data.FLAC['SampleRate'] = sampleRate;
+            case 4:  // VORBIS_COMMENT block
+                if (!data.VORBISCOMMENT) data.VORBISCOMMENT = {};
 
-            const channels = ((view.getUint8(offset + 16) >> 1) & 0x7) + 1;
-            data.FLAC['Channels'] = channels;
-
-            const bitsPerSample = (((view.getUint8(offset + 16) & 1) << 4) |
-                (view.getUint8(offset + 17) >> 4)) + 1;
-            data.FLAC['BitsPerSample'] = bitsPerSample;
-
-            const totalSamples = ((BigInt(view.getUint8(offset + 17) & 0xF) << 32n) |
-                BigInt(view.getUint8(offset + 18) << 24) |
-                BigInt(view.getUint8(offset + 19) << 16) |
-                BigInt(view.getUint8(offset + 20) << 8) |
-                BigInt(view.getUint8(offset + 21))).toString();
-            data.FLAC['TotalSamples'] = totalSamples;
-
-            const md5Array = new Uint8Array(arrayBuffer.slice(offset + 22, offset + 38));
-            const md5Signature = Array.from(md5Array)
-                .map(b => b.toString(16).padStart(2, '0'))
-                .join('');
-            data.FLAC['MD5Signature'] = md5Signature;
-        }
-        else if (blockType === 4) {
-            try {
-                let pos = offset + 4;
-
-                // Vendor length
+                let pos = offset;
                 const vendorLength = view.getUint32(pos, true);
                 pos += 4;
 
                 const vendorString = new TextDecoder().decode(
                     new Uint8Array(arrayBuffer.slice(pos, pos + vendorLength))
                 );
-                data.Vorbis['Vendor'] = vendorString;
+                data.VORBISCOMMENT['Vendor'] = vendorString;
                 pos += vendorLength;
 
-                // Number of comments
                 const commentListLength = view.getUint32(pos, true);
                 pos += 4;
 
-                // Read each comment
-                for (let i = 0; i < commentListLength; i++) {
+                // Process Vorbis comments
+                for (let i = 0; i < commentListLength && pos < offset + blockSize; i++) {
                     const commentLength = view.getUint32(pos, true);
                     pos += 4;
 
-                    const commentString = new TextDecoder().decode(
-                        new Uint8Array(arrayBuffer.slice(pos, pos + commentLength))
-                    );
-                    pos += commentLength;
+                    if (pos + commentLength <= offset + blockSize) {
+                        const commentString = new TextDecoder().decode(
+                            new Uint8Array(arrayBuffer.slice(pos, pos + commentLength))
+                        );
+                        pos += commentLength;
 
-                    const [key, ...valueParts] = commentString.split('=');
-                    const value = valueParts.join('=');
+                        const [key, ...valueParts] = commentString.split('=');
+                        const value = valueParts.join('=');
 
-                    // Map Vorbis keys to output format
-                    const keyMap = {
-                        'ALBUM': 'Album',
-                        'ARTIST': 'Artist',
-                        'ALBUMARTIST': 'Albumartist',
-                        'TITLE': 'Title',
-                        'DATE': 'Date',
-                        'GENRE': 'Genre',
-                        'TRACKNUMBER': 'TrackNumber',
-                        'DISCNUMBER': 'Discnumber',
-                        'COPYRIGHT': 'Copyright',
-                        'ENCODED_BY': 'Encodedby',
-                        'ENCODER': 'Encoder',
-                        'LYRICS': 'Lyrics',
-                        'ISRC': 'ISRCNumber',
-                        'COMMENT': 'Comment',
-                        'WOAS': 'Woas'
-                    };
+                        const keyMap = {
+                            'ALBUM': 'Album',
+                            'ARTIST': 'Artist',
+                            'ALBUMARTIST': 'Albumartist',
+                            'TITLE': 'Title',
+                            'DATE': 'Date',
+                            'GENRE': 'Genre',
+                            'TRACKNUMBER': 'TrackNumber',
+                            'DISCNUMBER': 'Discnumber',
+                            'COPYRIGHT': 'Copyright',
+                            'ENCODEDBY': 'Encodedby',
+                            'ENCODER': 'Encoder',
+                            'LYRICS': 'Lyrics',
+                            'ISRC': 'ISRCNumber',
+                            'COMMENT': 'Comment',
+                            'WOAS': 'Woas'
+                        };
 
-                    const mappedKey = keyMap[key.toUpperCase()];
-                    if (mappedKey) {
-                        data.Vorbis[mappedKey] = value;
+                        const mappedKey = keyMap[key.toUpperCase()];
+                        if (value) {
+                            if (mappedKey != null) {
+                                data.VORBISCOMMENT[mappedKey] = value;
+                            } else {
+                                data.VORBISCOMMENT[key] = value;
+                            }
+                        }
                     }
                 }
-            } catch (e) {
-                console.error('Error parsing Vorbis comments:', e);
-            }
+                break;
         }
 
-        offset += 4 + blockSize;
+        offset += blockSize;
         if (isLast) break;
     }
 
@@ -379,8 +389,8 @@ function formatOutput(metadata) {
     let output = '';
     const sections = {
         'File': metadata.File,
-        'FLAC': metadata.FLAC?.FLAC,
-        'Vorbis': metadata.FLAC?.Vorbis,
+        'FLAC': metadata.FLAC?.STREAMINFO,
+        'Vorbis': metadata.FLAC?.VORBISCOMMENT,
         'ID3v2': metadata.ID3v2,
         'MPEG': metadata.MPEG,
         'ID3v1': metadata.ID3v1,
