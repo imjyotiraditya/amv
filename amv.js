@@ -1,6 +1,8 @@
 const dropZone = document.getElementById('dropZone');
 const fileInput = document.getElementById('fileInput');
 const output = document.getElementById('output');
+const copyBtn = document.getElementById('copyBtn');
+const katbinBtn = document.getElementById('katbinBtn');
 
 const ID3v1_GENRES = [
     'Blues', 'Classic Rock', 'Country', 'Dance', 'Disco', 'Funk', 'Grunge', 'Hip-Hop',
@@ -52,6 +54,54 @@ const ETCO_TYPES = {
     0x15: 'profanity',
     0x16: 'profanity end'
 };
+
+copyBtn.addEventListener('click', async () => {
+    try {
+        await navigator.clipboard.writeText(output.textContent);
+        copyBtn.textContent = 'Copied!';
+        copyBtn.classList.add('success');
+        setTimeout(() => {
+            copyBtn.textContent = 'Copy';
+            copyBtn.classList.remove('success');
+        }, 2000);
+    } catch (err) {
+        copyBtn.textContent = 'Error!';
+        copyBtn.classList.add('error');
+        setTimeout(() => {
+            copyBtn.textContent = 'Copy';
+            copyBtn.classList.remove('error');
+        }, 2000);
+    }
+});
+
+katbinBtn.addEventListener('click', async () => {
+    try {
+        katbinBtn.textContent = 'Copying...';
+        const response = await fetch('https://katb.in/api/paste', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                paste: {
+                    content: output.textContent
+                }
+            })
+        });
+        const data = await response.json();
+        await navigator.clipboard.writeText(`https://katb.in/${data.id}`);
+        katbinBtn.textContent = 'Copied URL!';
+        katbinBtn.classList.add('success');
+    } catch (err) {
+        katbinBtn.textContent = 'Error!';
+        katbinBtn.classList.add('error');
+    } finally {
+        setTimeout(() => {
+            katbinBtn.textContent = 'Copy to Katbin';
+            katbinBtn.classList.remove('success', 'error');
+        }, 2000);
+    }
+});
 
 ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
     document.addEventListener(eventName, preventDefaults, false);
