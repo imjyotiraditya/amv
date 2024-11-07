@@ -160,6 +160,197 @@ const VORBIS_COMMENT_KEYS = {
     'SEASON': 'Season'
 }
 
+const ID3v2_FRAMES = {
+    AENC: 'AudioEncryption',
+    APIC: {
+        name: 'Picture',
+        subframes: {
+            'APIC-1': 'PictureMIMEType',
+            'APIC-2': 'PictureType',
+            'APIC-3': 'PictureDescription'
+        }
+    },
+    COMM: 'Comment',
+    COMR: 'Commercial',
+    ENCR: 'EncryptionMethod',
+    GEOB: {
+        name: 'GeneralEncapsulatedObject',
+        subframes: {
+            'GEOB-Mime': 'MIMEType',
+            'GEOB-File': 'Filename',
+            'GEOB-Desc': 'Description',
+            'GEOB-Data': 'Data'
+        }
+    },
+    GRID: 'GroupIdentification',
+    LINK: 'LinkedInformation',
+    MCDI: 'MusicCDIdentifier',
+    MLLT: 'MPEGLocationLookupTable',
+    OWNE: 'Ownership',
+    PRIV: 'Private',
+    PCNT: 'PlayCounter',
+    POPM: 'Popularimeter',
+    POSS: 'PostSynchronization',
+    RBUF: 'RecommendedBufferSize',
+    RVAD: 'RelativeVolumeAdjustment',
+    RVRB: 'Reverb',
+    SYLT: 'SyncLyrics',
+    SYTC: 'SynchronizedTempoCodes',
+    TALB: 'Album',
+    TBPM: 'BeatsPerMinute',
+    TCOM: 'Composer',
+    TCON: 'Genre',
+    TCOP: 'Copyright',
+    TDAT: 'Date',
+    TDLY: 'PlaylistDelay',
+    TENC: 'EncodedBy',
+    TEXT: 'Lyricist',
+    TFLT: 'FileType',
+    TIME: 'Time',
+    TIT1: 'Grouping',
+    TIT2: 'Title',
+    TIT3: 'Subtitle',
+    TKEY: 'InitialKey',
+    TLAN: 'Language',
+    TLEN: 'Length',
+    TMED: 'MediaType',
+    TOAL: 'OriginalAlbum',
+    TOFN: 'OriginalFilename',
+    TOLY: 'OriginalLyricist',
+    TOPE: 'OriginalArtist',
+    TORY: 'OriginalReleaseYear',
+    TOWN: 'FileOwner',
+    TPE1: 'Artist',
+    TPE2: 'Band',
+    TPE3: 'Conductor',
+    TPE4: 'InterpretedBy',
+    TPOS: 'PartOfSet',
+    TPUB: 'Publisher',
+    TRCK: 'Track',
+    TRDA: 'RecordingDates',
+    TRSN: 'InternetRadioStationName',
+    TRSO: 'InternetRadioStationOwner',
+    TSIZ: 'Size',
+    TSRC: 'ISRC',
+    TSSE: 'EncoderSettings',
+    TYER: 'Year',
+    TXXX: 'UserDefinedText',
+    UFID: 'UniqueFileIdentifier',
+    USER: 'TermsOfUse',
+    USLT: 'Lyrics',
+    WCOM: 'CommercialURL',
+    WCOP: 'CopyrightURL',
+    WOAF: 'FileURL',
+    WOAR: 'ArtistURL',
+    WOAS: 'SourceURL',
+    WORS: 'InternetRadioStationURL',
+    WPAY: 'PaymentURL',
+    WPUB: 'PublisherURL',
+    WXXX: 'UserDefinedURL'
+};
+
+const ID3v2_2_FRAMES = {
+    BUF: 'RecommendedBufferSize',
+    CNT: 'PlayCounter',
+    COM: 'Comment',
+    CRA: 'AudioEncryption',
+    CRM: 'EncryptedMetaFrame',
+    ETC: 'EventTimingCodes',
+    EQU: 'Equalization',
+    GEO: 'GeneralEncapsulatedObject',
+    IPL: 'InvolvedPeople',
+    LNK: 'LinkedInformation',
+    MCI: 'MusicCDIdentifier',
+    MLL: 'MPEGLocationLookupTable',
+    PIC: 'Picture',
+    POP: 'Popularimeter',
+    REV: 'Reverb',
+    RVA: 'RelativeVolumeAdjustment',
+    SLT: 'SyncLyrics',
+    STC: 'SynchronizedTempoCodes',
+    TAL: 'Album',
+    TBP: 'BeatsPerMinute',
+    TCM: 'Composer',
+    TCO: 'Genre',
+    TCR: 'Copyright',
+    TDA: 'Date',
+    TDY: 'PlaylistDelay',
+    TEN: 'EncodedBy',
+    TFT: 'FileType',
+    TIM: 'Time',
+    TKE: 'InitialKey',
+    TLA: 'Language',
+    TLE: 'Length',
+    TMT: 'MediaType',
+    TOA: 'OriginalArtist',
+    TOF: 'OriginalFilename',
+    TOL: 'OriginalLyricist',
+    TOR: 'OriginalReleaseYear',
+    TOT: 'OriginalAlbum',
+    TP1: 'Artist',
+    TP2: 'Band',
+    TP3: 'Conductor',
+    TP4: 'InterpretedBy',
+    TPA: 'PartOfSet',
+    TPB: 'Publisher',
+    TRC: 'ISRC',
+    TRD: 'RecordingDates',
+    TRK: 'Track',
+    TSI: 'Size',
+    TSS: 'EncoderSettings',
+    TT1: 'Grouping',
+    TT2: 'Title',
+    TT3: 'Subtitle',
+    TXT: 'Lyricist',
+    TXX: 'UserDefinedText',
+    TYE: 'Year',
+    UFI: 'UniqueFileIdentifier',
+    ULT: 'Lyrics',
+    WAF: 'FileURL',
+    WAR: 'ArtistURL',
+    WAS: 'SourceURL',
+    WCM: 'CommercialURL',
+    WCP: 'CopyrightURL',
+    WPB: 'PublisherURL',
+    WXX: 'UserDefinedURL'
+};
+
+const PICTURE_TYPES = {
+    0x00: 'Other',
+    0x01: '32x32 PNG Icon',
+    0x02: 'Other Icon',
+    0x03: 'Front Cover',
+    0x04: 'Back Cover',
+    0x05: 'Leaflet',
+    0x06: 'Media',
+    0x07: 'Lead Artist',
+    0x08: 'Artist',
+    0x09: 'Conductor',
+    0x0A: 'Band',
+    0x0B: 'Composer',
+    0x0C: 'Lyricist',
+    0x0D: 'Recording Studio or Location',
+    0x0E: 'Recording Session',
+    0x0F: 'Performance',
+    0x10: 'Capture from Movie or Video',
+    0x11: 'Bright(ly) Colored Fish',
+    0x12: 'Illustration',
+    0x13: 'Band Logo',
+    0x14: 'Publisher Logo'
+};
+
+const SYNCED_LYRICS_TYPES = {
+    0x00: 'Other',
+    0x01: 'Lyrics',
+    0x02: 'Text Transcription',
+    0x03: 'Movement/Part Name',
+    0x04: 'Events',
+    0x05: 'Chord',
+    0x06: 'Trivia/Pop-up Information',
+    0x07: 'Web Page URL',
+    0x08: 'Image URL'
+};
+
 const UI = {
     dropZone: document.getElementById('dropZone'),
     fileInput: document.getElementById('fileInput'),
@@ -175,6 +366,20 @@ const Utils = {
         return `${minutes}:${remainingSeconds.toString().padStart(2, '0')}`;
     },
 
+    formatSyncedTime(timestamp, format) {
+        if (format === 1) { // Timestamp in MPEG frames
+            return `[${timestamp}]`;
+        } else if (format === 2) { // Timestamp in milliseconds
+            const ms = timestamp;
+            const seconds = Math.floor(ms / 1000);
+            const minutes = Math.floor(seconds / 60);
+            const remainingSeconds = seconds % 60;
+            const remainingMs = ms % 1000;
+            return `[${minutes}:${String(remainingSeconds).padStart(2, '0')}.${String(remainingMs).padStart(3, '0')}]`;
+        }
+        return `[${timestamp}]`;
+    },
+
     formatFileSize(bytes) {
         const units = ['B', 'KB', 'MB', 'GB'];
         let size = bytes;
@@ -184,6 +389,13 @@ const Utils = {
             unitIndex++;
         }
         return size.toFixed(1) + ' ' + units[unitIndex];
+    },
+
+    unSyncSafe(value) {
+        return ((value & 0x7f000000) >> 3) |
+            ((value & 0x007f0000) >> 2) |
+            ((value & 0x00007f00) >> 1) |
+            (value & 0x0000007f);
     },
 
     decodeText(buffer, encoding, offset = 0) {
@@ -203,6 +415,27 @@ const Utils = {
                 decoder = new TextDecoder('utf-8');
         }
         return decoder.decode(buffer).replace(/\0/g, '');
+    },
+
+    decodeString(data, encoding) {
+        if (!data || !data.length) return '';
+
+        let decoder;
+        switch (encoding) {
+            case 0:
+                decoder = new TextDecoder('iso-8859-1');
+                break;
+            case 1:
+            case 2:
+                decoder = new TextDecoder('utf-16');
+                break;
+            case 3:
+                decoder = new TextDecoder('utf-8');
+                break;
+            default:
+                decoder = new TextDecoder('utf-8');
+        }
+        return decoder.decode(data).replace(/\0+$/, '');
     },
 
     findTerminator(array, encoding, start = 0) {
@@ -253,6 +486,324 @@ const Utils = {
         } else {
             return Math.floor(((144 * bitrate * 1000 / sampleRate) + padding));
         }
+    },
+
+    decodeGenre(value) {
+        if (!value) return '';
+
+        const parenthesisRegex = /^\((\d+)\)$/;
+        const refinedRegex = /\((\d+)\)/g;
+
+        const singleMatch = value.match(parenthesisRegex);
+        if (singleMatch) {
+            const genreNum = parseInt(singleMatch[1]);
+            return ID3v1_GENRES[genreNum] || `Unknown (${genreNum})`;
+        }
+
+        let processedValue = value;
+
+        processedValue = processedValue.replace(refinedRegex, (match, num) => {
+            const genreNum = parseInt(num);
+            return ID3v1_GENRES[genreNum] || `Unknown (${genreNum})`;
+        });
+
+        if (/^\d+$/.test(processedValue)) {
+            const genreNum = parseInt(processedValue);
+            return ID3v1_GENRES[genreNum] || `Unknown (${genreNum})`;
+        }
+
+        if (processedValue.includes('/')) {
+            return processedValue.split('/')
+                .map(genre => {
+                    if (/^\d+$/.test(genre)) {
+                        const genreNum = parseInt(genre);
+                        return ID3v1_GENRES[genreNum] || `Unknown (${genreNum})`;
+                    }
+                    return genre;
+                })
+                .filter(Boolean)
+                .join('/');
+        }
+
+        return processedValue;
+    },
+
+    getGenreID(name) {
+        return ID3v1_GENRES.findIndex(genre =>
+            genre.toLowerCase() === name.toLowerCase());
+    },
+
+    isValidGenre(genre) {
+        if (!genre) return false;
+        if (/^\d+$/.test(genre)) {
+            const num = parseInt(genre);
+            return num >= 0 && num < ID3v1_GENRES.length;
+        }
+        return ID3v1_GENRES.some(g =>
+            g.toLowerCase() === genre.toLowerCase());
+    },
+
+    readNullTerminated(data, offset, encoding) {
+        let terminator;
+        let i = offset;
+        let terminatorLength;
+
+        switch (encoding) {
+            case 0: // ISO-8859-1
+            case 3: // UTF-8
+                terminatorLength = 1;
+                // Find single null byte
+                while (i < data.length) {
+                    if (data[i] === 0) {
+                        break;
+                    }
+                    i++;
+                }
+                break;
+
+            case 1: // UTF-16 with BOM
+            case 2: // UTF-16BE
+                terminatorLength = 2;
+                // Find two null bytes
+                while (i < data.length - 1) {
+                    if (data[i] === 0 && data[i + 1] === 0) {
+                        break;
+                    }
+                    i += 2;
+                }
+                break;
+
+            default:
+                throw new Error(`Unknown encoding: ${encoding}`);
+        }
+
+        // Return the string data without the terminator
+        return data.slice(offset, i);
+    },
+
+    splitNullTerminated(data, encoding) {
+        const chunks = [];
+        let start = 0;
+
+        if (encoding === 1 || encoding === 2) {
+            for (let i = 0; i < data.length - 1; i += 2) {
+                if (data[i] === 0 && data[i + 1] === 0) {
+                    chunks.push(data.slice(start, i));
+                    start = i + 2;
+                }
+            }
+        } else { // Single byte encodings
+            for (let i = 0; i < data.length; i++) {
+                if (data[i] === 0) {
+                    chunks.push(data.slice(start, i));
+                    start = i + 1;
+                }
+            }
+        }
+
+        if (start < data.length) {
+            chunks.push(data.slice(start));
+        }
+
+        return chunks;
+    },
+
+    parseAPICFrame(data, isID3v2_2) {
+        const encoding = data[0];
+        let offset = 1;
+        let mimeType = '';
+
+        if (isID3v2_2) {
+            mimeType = String.fromCharCode(data[1], data[2], data[3]);
+            offset = 4;
+        } else {
+            while (data[offset] !== 0 && offset < data.length) {
+                mimeType += String.fromCharCode(data[offset]);
+                offset++;
+            }
+            offset++;
+        }
+
+        const pictureType = data[offset];
+        offset++;
+
+        let descriptionEnd;
+        if (encoding === 1 || encoding === 2) {
+            descriptionEnd = offset;
+            while (descriptionEnd < data.length - 1) {
+                if (data[descriptionEnd] === 0 && data[descriptionEnd + 1] === 0) {
+                    break;
+                }
+                descriptionEnd += 2;
+            }
+        } else {
+            descriptionEnd = offset;
+            while (descriptionEnd < data.length && data[descriptionEnd] !== 0) {
+                descriptionEnd++;
+            }
+        }
+
+        const description = Utils.decodeString(
+            data.slice(offset, descriptionEnd),
+            encoding
+        );
+
+        offset = descriptionEnd + (encoding === 1 || encoding === 2 ? 2 : 1);
+
+        const pictureData = data.slice(offset);
+
+        return {
+            mimeType,
+            pictureType: PICTURE_TYPES[pictureType] || 'Unknown',
+            description,
+            size: pictureData.length,
+            data: pictureData
+        };
+    },
+
+    parseLyrics(data, isUnsynchronizedLyrics = true) {
+        const encoding = data[0];
+        let offset = 1;
+
+        const language = String.fromCharCode(
+            data[offset],
+            data[offset + 1],
+            data[offset + 2]
+        );
+        offset += 3;
+
+        // Get content descriptor
+        let descriptorEnd;
+        if (encoding === 1 || encoding === 2) { // UTF-16
+            descriptorEnd = offset;
+            while (descriptorEnd < data.length - 1) {
+                if (data[descriptorEnd] === 0 && data[descriptorEnd + 1] === 0) {
+                    break;
+                }
+                descriptorEnd += 2;
+            }
+        } else {
+            descriptorEnd = offset;
+            while (descriptorEnd < data.length && data[descriptorEnd] !== 0) {
+                descriptorEnd++;
+            }
+        }
+
+        const descriptor = Utils.decodeString(
+            data.slice(offset, descriptorEnd),
+            encoding
+        );
+
+        // Skip descriptor terminator
+        offset = descriptorEnd + (encoding === 1 || encoding === 2 ? 2 : 1);
+
+        // Get lyrics text
+        const lyrics = Utils.decodeString(
+            data.slice(offset),
+            encoding
+        );
+
+        return {
+            language,
+            descriptor,
+            lyrics
+        };
+    },
+
+    // Parse synchronized lyrics
+    parseSyncLyrics(data) {
+        const encoding = data[0];
+        let offset = 1;
+
+        // Get language (3 bytes)
+        const language = String.fromCharCode(
+            data[offset],
+            data[offset + 1],
+            data[offset + 2]
+        );
+        offset += 3;
+
+        // Get time stamp format
+        const timeStampFormat = data[offset];
+        offset++;
+
+        // Get content type
+        const contentType = data[offset];
+        offset++;
+
+        // Get content descriptor
+        let descriptorEnd;
+        if (encoding === 1 || encoding === 2) {
+            descriptorEnd = offset;
+            while (descriptorEnd < data.length - 1) {
+                if (data[descriptorEnd] === 0 && data[descriptorEnd + 1] === 0) {
+                    break;
+                }
+                descriptorEnd += 2;
+            }
+        } else {
+            descriptorEnd = offset;
+            while (descriptorEnd < data.length && data[descriptorEnd] !== 0) {
+                descriptorEnd++;
+            }
+        }
+
+        const descriptor = Utils.decodeString(
+            data.slice(offset, descriptorEnd),
+            encoding
+        );
+
+        // Skip descriptor terminator
+        offset = descriptorEnd + (encoding === 1 || encoding === 2 ? 2 : 1);
+
+        // Parse synchronized lyrics entries
+        const syncedLyrics = [];
+        while (offset < data.length) {
+            // Read time stamp (4 bytes)
+            const timeStamp = (data[offset] << 24) |
+                (data[offset + 1] << 16) |
+                (data[offset + 2] << 8) |
+                data[offset + 3];
+            offset += 4;
+
+            // Find end of text
+            let textEnd;
+            if (encoding === 1 || encoding === 2) {
+                textEnd = offset;
+                while (textEnd < data.length - 1) {
+                    if (data[textEnd] === 0 && data[textEnd + 1] === 0) {
+                        break;
+                    }
+                    textEnd += 2;
+                }
+            } else {
+                textEnd = offset;
+                while (textEnd < data.length && data[textEnd] !== 0) {
+                    textEnd++;
+                }
+            }
+
+            const text = Utils.decodeString(
+                data.slice(offset, textEnd),
+                encoding
+            );
+
+            syncedLyrics.push({
+                timeStamp,
+                text
+            });
+
+            // Skip text terminator
+            offset = textEnd + (encoding === 1 || encoding === 2 ? 2 : 1);
+        }
+
+        return {
+            language,
+            timeStampFormat,
+            contentType: SYNCED_LYRICS_TYPES[contentType] || 'Unknown',
+            descriptor,
+            syncedLyrics
+        };
     }
 };
 
@@ -496,6 +1047,7 @@ const Parsers = {
         const view = new DataView(arrayBuffer);
         const data = {};
 
+        // Check for ID3v2 header
         if (String.fromCharCode(view.getUint8(0), view.getUint8(1), view.getUint8(2)) !== 'ID3') {
             return data;
         }
@@ -503,260 +1055,312 @@ const Parsers = {
         const version = view.getUint8(3);
         const revision = view.getUint8(4);
         const flags = view.getUint8(5);
+        let size = Utils.unSyncSafe(view.getUint32(6));
 
-        const size = (view.getUint8(6) << 21) |
-            (view.getUint8(7) << 14) |
-            (view.getUint8(8) << 7) |
-            view.getUint8(9);
+        data.Version = `2.${version}.${revision}`;
+        data.Flags = flags;
+        data.Size = size;
 
-        data['Version'] = `2.${version}.${revision}`;
-        data['Size'] = size + ' bytes';
-        data['Flags'] = flags;
+        let offset = 10;
+        const isID3v22 = version === 2;
+        const frameHeaderSize = isID3v22 ? 6 : 10;
 
-        const frameMapping = {
-            'AENC': 'AudioEncryption',
-            'APIC': 'AttachedPicture',
-            'ASPI': 'AudioSeekPointIndex',
-            'COMM': 'Comment',
-            'COMR': 'Commercial',
-            'ENCR': 'EncryptionMethod',
-            'EQU2': 'Equalization2',
-            'ETCO': 'EventTimingCodes',
-            'GEOB': 'GeneralEncapsulatedObject',
-            'GRID': 'GroupIdentification',
-            'LINK': 'LinkedInformation',
-            'MCDI': 'MusicCDIdentifier',
-            'MLLT': 'MPEGLocationLookupTable',
-            'OWNE': 'Ownership',
-            'PRIV': 'PrivateFrame',
-            'PCNT': 'PlayCounter',
-            'POPM': 'Popularimeter',
-            'POSS': 'PositionSynchronization',
-            'RBUF': 'RecommendedBufferSize',
-            'RVA2': 'RelativeVolumeAdjustment2',
-            'RVRB': 'Reverb',
-            'SEEK': 'Seek',
-            'SIGN': 'Signature',
-            'SYTC': 'SynchronizedTempoCodes',
-            'TALB': 'Album',
-            'TBPM': 'BeatsPerMinute',
-            'TCOM': 'Composer',
-            'TCON': 'Genre',
-            'TCOP': 'Copyright',
-            'TDEN': 'EncodingTime',
-            'TDLY': 'PlaylistDelay',
-            'TDOR': 'OriginalReleaseTime',
-            'TDRC': 'RecordingTime',
-            'TDRL': 'ReleaseTime',
-            'TDTG': 'TaggingTime',
-            'TENC': 'EncodedBy',
-            'TEXT': 'Lyricist',
-            'TFLT': 'FileType',
-            'TIPL': 'InvolvedPeople',
-            'TIT1': 'ContentGroup',
-            'TIT2': 'Title',
-            'TIT3': 'Subtitle',
-            'TKEY': 'InitialKey',
-            'TLAN': 'Language',
-            'TLEN': 'Length',
-            'TMCL': 'MusicianCredits',
-            'TMED': 'Media',
-            'TMOO': 'Mood',
-            'TOAL': 'OriginalAlbum',
-            'TOFN': 'OriginalFilename',
-            'TOLY': 'OriginalLyricist',
-            'TOPE': 'OriginalArtist',
-            'TOWN': 'FileOwner',
-            'TPE1': 'Artist',
-            'TPE2': 'Band',
-            'TPE3': 'Conductor',
-            'TPE4': 'InterpretedBy',
-            'TPOS': 'PartOfSet',
-            'TPRO': 'ProducedNotice',
-            'TPUB': 'Publisher',
-            'TRCK': 'Track',
-            'TRSN': 'InternetRadioStationName',
-            'TRSO': 'InternetRadioStationOwner',
-            'TSOA': 'AlbumSortOrder',
-            'TSOP': 'PerformerSortOrder',
-            'TSOT': 'TitleSortOrder',
-            'TSRC': 'ISRC',
-            'TSSE': 'EncoderSettings',
-            'TSST': 'SetSubtitle',
-            'TXXX': 'UserDefinedText',
-            'UFID': 'UniqueFileIdentifier',
-            'USER': 'TermsOfUse',
-            'WCOM': 'CommercialInformation',
-            'WCOP': 'CopyrightInformation',
-            'WOAF': 'OfficialAudioFileWebpage',
-            'WOAR': 'OfficialArtistWebpage',
-            'WOAS': 'OfficialAudioSourceWebpage',
-            'WORS': 'OfficialInternetRadioStationHomepage',
-            'WPAY': 'Payment',
-            'WPUB': 'PublishersOfficialWebpage'
-        };
+        // Get appropriate frame mapping table
+        const frameTable = isID3v22 ? ID3v2_2_FRAMES : ID3v2_FRAMES;
 
-        const pictureTypes = {
-            0x00: 'Other',
-            0x01: 'File Icon',
-            0x02: 'Other File Icon',
-            0x03: 'Front Cover',
-            0x04: 'Back Cover',
-            0x05: 'Leaflet Page',
-            0x06: 'Media',
-            0x07: 'Lead Artist',
-            0x08: 'Artist',
-            0x09: 'Conductor',
-            0x0A: 'Band',
-            0x0B: 'Composer',
-            0x0C: 'Lyricist',
-            0x0D: 'Recording Location',
-            0x0E: 'During Recording',
-            0x0F: 'During Performance',
-            0x10: 'Movie Screen Capture',
-            0x11: 'A Bright Colored Fish',
-            0x12: 'Illustration',
-            0x13: 'Band Logo',
-            0x14: 'Publisher Logo'
-        };
+        // Handle extended header if present (ID3v2.3+)
+        if (version >= 3 && (flags & 0x40)) {
+            const extHeaderSize = version === 4 ?
+                Utils.unSyncSafe(view.getUint32(offset)) :
+                view.getUint32(offset);
+            offset += extHeaderSize;
+        }
 
-        let pos = 10;
-        let commentIndex = 1;
-        let lastSeenCommentLanguage = '';
+        // Main frame parsing loop
+        while (offset < size + 10) {
+            // Read frame header
+            let frameID, frameSize, frameFlags;
 
-        while (pos < size + 10) {
-            let frameID = '';
-            for (let i = 0; i < 4; i++) {
-                const char = view.getUint8(pos + i);
-                if (char === 0) break;
-                frameID += String.fromCharCode(char);
+            if (isID3v22) {
+                // ID3v2.2 frame header
+                frameID = String.fromCharCode(
+                    view.getUint8(offset),
+                    view.getUint8(offset + 1),
+                    view.getUint8(offset + 2)
+                );
+                frameSize = (view.getUint8(offset + 3) << 16) |
+                    (view.getUint8(offset + 4) << 8) |
+                    view.getUint8(offset + 5);
+                offset += 6;
+            } else {
+                // ID3v2.3/2.4 frame header
+                frameID = String.fromCharCode(
+                    view.getUint8(offset),
+                    view.getUint8(offset + 1),
+                    view.getUint8(offset + 2),
+                    view.getUint8(offset + 3)
+                );
+                frameSize = version === 4 ?
+                    Utils.unSyncSafe(view.getUint32(offset + 4)) :
+                    view.getUint32(offset + 4);
+                frameFlags = view.getUint16(offset + 8);
+                offset += 10;
             }
 
-            if (frameID === '') break;
+            // Break if we hit padding or invalid frame
+            if (frameID === '\0\0\0' || frameID === '\0\0\0\0') break;
+            if (!frameSize || offset + frameSize > size + 10) break;
 
-            const frameSize = (view.getUint8(pos + 4) << 24) |
-                (view.getUint8(pos + 5) << 16) |
-                (view.getUint8(pos + 6) << 8) |
-                view.getUint8(pos + 7);
-            const frameFlags = (view.getUint8(pos + 8) << 8) | view.getUint8(pos + 9);
+            // Get frame content
+            const frameContent = new Uint8Array(arrayBuffer.slice(offset, offset + frameSize));
 
-            if (frameSize > 0) {
-                const contentStart = pos + 10;
-                const contentEnd = contentStart + frameSize;
-                const frameData = new Uint8Array(arrayBuffer.slice(contentStart, contentEnd));
+            // Skip encrypted frames
+            if (frameFlags && (frameFlags & 0x0004)) {
+                offset += frameSize;
+                continue;
+            }
 
-                try {
-                    switch (true) {
-                        case frameID.startsWith('T'): {
-                            const encoding = frameData[0];
-                            const text = Utils.decodeText(frameData.slice(1), encoding);
-
-                            if (frameID === 'TXXX') {
-                                const parts = text.split('\0').filter(Boolean);
-                                if (parts.length >= 2) {
-                                    data['UserDefinedText'] = `(${parts[0]}) ${parts[1]}`;
-                                }
-                            } else {
-                                const key = frameMapping[frameID] || frameID;
-
-                                switch (frameID) {
-                                    case 'TDRC':
-                                        data[key] = text.substring(0, 4);
-                                        break;
-                                    case 'TLEN':
-                                        data[key] = (parseInt(text) / 1000).toFixed(3) + ' s';
-                                        break;
-                                    case 'TBPM':
-                                        data[key] = parseInt(text) || 0;
-                                        break;
-                                    default:
-                                        data[key] = text;
-                                }
-                            }
-                            break;
-                        }
-
-                        case frameID === 'COMM': {
-                            const encoding = frameData[0];
-                            const language = String.fromCharCode(...frameData.slice(1, 4));
-                            const descEnd = Utils.findTerminator(frameData, encoding, 4);
-                            const description = Utils.decodeText(frameData.slice(4, descEnd), encoding);
-                            const comment = Utils.decodeText(frameData.slice(descEnd + 1), encoding);
-
-                            const formattedComment = description ?
-                                `(${description}) ${comment}` :
-                                comment;
-
-                            if (lastSeenCommentLanguage === language) {
-                                data[`Comment_${commentIndex++}`] = formattedComment;
-                            } else {
-                                data['Comment'] = formattedComment;
-                                lastSeenCommentLanguage = language;
-                            }
-                            break;
-                        }
-
-                        case frameID === 'APIC': {
-                            const encoding = frameData[0];
-                            let pos = 1;
-
-                            while (frameData[pos] !== 0 && pos < frameData.length) pos++;
-                            const mimeType = Utils.decodeText(frameData.slice(1, pos), 0);
-                            pos++;
-
-                            const pictureType = frameData[pos];
-                            pos++;
-
-                            const descEnd = Utils.findTerminator(frameData, encoding, pos);
-                            const description = Utils.decodeText(frameData.slice(pos, descEnd), encoding);
-
-                            data['PictureMIMEType'] = mimeType;
-                            data['PictureType'] = pictureTypes[pictureType] || 'Unknown';
-                            data['PictureDescription'] = description;
-                            data['Picture'] = `Picture present (${frameData.length - descEnd - 1} bytes)`;
-                            break;
-                        }
-
-                        case frameID.startsWith('W'): {
-                            const url = Utils.decodeText(frameData, 0);
-                            const key = frameMapping[frameID] || frameID;
-                            data[key] = url;
-                            break;
-                        }
-
-                        case frameID === 'ETCO': {
-                            const format = frameData[0];
-                            const events = [];
-                            let offset = 1;
-
-                            while (offset < frameData.length - 4) {
-                                const type = frameData[offset];
-                                const timestamp = (frameData[offset + 1] << 24) |
-                                    (frameData[offset + 2] << 16) |
-                                    (frameData[offset + 3] << 8) |
-                                    frameData[offset + 4];
-
-                                events.push({
-                                    type: ETCO_TYPES[type] || 'Unknown',
-                                    timestamp: timestamp
-                                });
-
-                                offset += 5;
-                            }
-
-                            data['EventTimingCodes'] = {
-                                format: format,
-                                events: events
-                            };
-                            break;
-                        }
+            // Handle unsynchronization at frame level (ID3v2.4)
+            let processedContent = frameContent;
+            if (version === 4 && frameFlags && (frameFlags & 0x0002)) {
+                processedContent = new Uint8Array(frameSize);
+                let writePos = 0;
+                for (let i = 0; i < frameContent.length; i++) {
+                    processedContent[writePos++] = frameContent[i];
+                    if (frameContent[i] === 0xFF && frameContent[i + 1] === 0x00) {
+                        i++;
                     }
-                } catch (e) {
-                    console.warn(`Failed to parse frame ${frameID}:`, e);
                 }
             }
 
-            pos += 10 + frameSize;
+            // Process frame based on type
+            try {
+                switch (true) {
+                    // Text frames
+                    case frameID[0] === 'T' && frameID !== 'TXXX': {
+                        if (!processedContent.length) break;
+                        const encoding = processedContent[0];
+                        const text = Utils.decodeString(processedContent.slice(1), encoding);
+
+                        // Special handling for specific frame IDs
+                        let key;
+                        switch (frameID) {
+                            case 'TDRC':
+                            case 'TYER':
+                                key = 'Year';
+                                break;
+                            case 'TRCK':
+                                key = 'Track';
+                                break;
+                            default:
+                                key = frameTable[frameID] || frameID;
+                        }
+
+                        data[key] = text;
+                        break;
+                    }
+
+                    // URL frames
+                    case frameID[0] === 'W' && frameID !== 'WXXX': {
+                        const url = Utils.decodeString(processedContent, 0); // Always ISO-8859-1
+                        data[frameTable[frameID]] = url;
+                        break;
+                    }
+
+                    // User-defined URL (WXXX)
+                    case frameID === 'WXXX': {
+                        if (!processedContent.length) break;
+                        const encoding = processedContent[0];
+                        let parts = Utils.splitNullTerminated(processedContent.slice(1), encoding);
+                        if (parts.length >= 2) {
+                            const description = Utils.decodeString(parts[0], encoding);
+                            const url = Utils.decodeString(parts[1], 0); // URL always ISO-8859-1
+                            data[`UserDefinedURL-${description}`] = url;
+                        }
+                        break;
+                    }
+
+                    // Comments (COMM)
+                    case frameID === 'COMM' || frameID === 'COM': {
+                        if (processedContent.length < 4) break;
+                        const encoding = processedContent[0];
+                        const language = String.fromCharCode(
+                            processedContent[1],
+                            processedContent[2],
+                            processedContent[3]
+                        );
+                        let textParts = Utils.splitNullTerminated(processedContent.slice(4), encoding);
+                        if (textParts.length >= 2) {
+                            const text = Utils.decodeString(textParts[1], encoding);
+                            data.Comment = text;  // Just store the comment text directly
+                        }
+                        break;
+                    }
+
+                    // Unsynchronized lyrics handling
+                    case frameID === 'USLT' || frameID === 'ULT': {
+                        if (processedContent.length < 4) break;
+                        const encoding = processedContent[0];
+                        const language = String.fromCharCode(
+                            processedContent[1],
+                            processedContent[2],
+                            processedContent[3]
+                        ).toLowerCase();
+
+                        let textParts = Utils.splitNullTerminated(processedContent.slice(4), encoding);
+                        if (textParts.length >= 2) {
+                            const lyrics = Utils.decodeString(textParts[1], encoding)
+                                .split('\n')
+                                .map(line => line.trim())
+                                .filter(line => line)  // Remove empty lines
+                                .join('\n');
+
+                            data[`Lyrics-${language}`] = lyrics;
+                        }
+                        break;
+                    }
+
+                    // Synchronized lyrics (SYLT/SLT)
+                    case frameID === 'SYLT' || frameID === 'SLT': {
+                        if (processedContent.length < 6) break;
+                        const encoding = processedContent[0];
+                        const language = String.fromCharCode(
+                            processedContent[1],
+                            processedContent[2],
+                            processedContent[3]
+                        ).toLowerCase();
+                        const timeStampFormat = processedContent[4];
+
+                        let pos = 6;
+                        // Skip descriptor
+                        const descriptor = Utils.readNullTerminated(processedContent, pos, encoding);
+                        pos += descriptor.length + (encoding === 1 || encoding === 2 ? 2 : 1);
+
+                        const syncedLines = [];
+                        while (pos < processedContent.length - 4) {
+                            const timeStamp = (processedContent[pos] << 24) |
+                                (processedContent[pos + 1] << 16) |
+                                (processedContent[pos + 2] << 8) |
+                                processedContent[pos + 3];
+                            pos += 4;
+
+                            const text = Utils.readNullTerminated(processedContent, pos, encoding);
+                            pos += text.length + (encoding === 1 || encoding === 2 ? 2 : 1);
+
+                            if (text.length) {
+                                const formattedTime = Utils.formatSyncedTime(timeStamp, timeStampFormat);
+                                const decodedText = Utils.decodeString(text, encoding).trim();
+                                if (decodedText) {
+                                    syncedLines.push(`${formattedTime} ${decodedText}`);
+                                }
+                            }
+                        }
+
+                        if (syncedLines.length) {
+                            data[`SyncedLyrics-${language}`] = syncedLines.join('\n');
+                        }
+                        break;
+                    }
+
+                    // Attached pictures (APIC/PIC)
+                    case frameID === 'APIC' || frameID === 'PIC': {
+                        if (processedContent.length < 4) break;
+                        const encoding = processedContent[0];
+                        let pos = 1;
+
+                        let mimeType;
+                        if (frameID === 'PIC') {
+                            mimeType = String.fromCharCode(
+                                processedContent[1],
+                                processedContent[2],
+                                processedContent[3]
+                            ).toLowerCase();
+                            if (mimeType === 'jpg') mimeType = 'image/jpeg';
+                            else if (mimeType === 'png') mimeType = 'image/png';
+                            pos = 4;
+                        } else {
+                            const mimeBytes = [];
+                            while (pos < processedContent.length && processedContent[pos] !== 0) {
+                                mimeBytes.push(processedContent[pos]);
+                                pos++;
+                            }
+                            mimeType = String.fromCharCode(...mimeBytes);
+                            pos++; // Skip null terminator
+                        }
+
+                        const pictureType = processedContent[pos];
+                        pos++;
+
+                        // Skip description and move to picture data
+                        const description = Utils.readNullTerminated(processedContent, pos, encoding);
+                        pos += description.length + (encoding === 1 || encoding === 2 ? 2 : 1);
+
+                        const pictureData = processedContent.slice(pos);
+
+                        const picTypeText = PICTURE_TYPES[pictureType] || 'Other';
+                        data[`Picture (${picTypeText})`] = `${mimeType}, ${Utils.formatFileSize(pictureData.length)}`;
+                        break;
+                    }
+
+                    // Private frames (PRIV)
+                    case frameID === 'PRIV': {
+                        let pos = 0;
+                        const ownerBytes = [];
+                        while (pos < processedContent.length && processedContent[pos] !== 0) {
+                            ownerBytes.push(processedContent[pos]);
+                            pos++;
+                        }
+                        const owner = String.fromCharCode(...ownerBytes);
+                        pos++; // Skip null terminator
+
+                        const privateData = processedContent.slice(pos);
+                        data[`Private-${owner}`] = privateData;
+                        break;
+                    }
+
+                    // Play counter (PCNT)
+                    case frameID === 'PCNT' || frameID === 'CNT': {
+                        let counter = 0;
+                        for (let i = 0; i < processedContent.length; i++) {
+                            counter = (counter << 8) | processedContent[i];
+                        }
+                        data.PlayCounter = counter;
+                        break;
+                    }
+
+                    // Popularimeter (POPM)
+                    case frameID === 'POPM' || frameID === 'POP': {
+                        let pos = 0;
+                        const emailBytes = [];
+                        while (pos < processedContent.length && processedContent[pos] !== 0) {
+                            emailBytes.push(processedContent[pos]);
+                            pos++;
+                        }
+                        const email = String.fromCharCode(...emailBytes);
+                        pos++; // Skip null terminator
+
+                        const rating = processedContent[pos];
+                        pos++;
+
+                        let counter = 0;
+                        while (pos < processedContent.length) {
+                            counter = (counter << 8) | processedContent[pos];
+                            pos++;
+                        }
+
+                        data.Popularimeter = {
+                            email,
+                            rating,
+                            counter
+                        };
+                        break;
+                    }
+                }
+            } catch (error) {
+                console.warn(`Error parsing frame ${frameID}:`, error);
+            }
+
+            offset += frameSize;
         }
 
         return data;
@@ -910,9 +1514,9 @@ const Formatter = {
         let output = '';
         const sections = {
             'File': metadata.File,
+            'ID3v2': metadata.ID3v2,
             'FLAC': metadata.FLAC?.STREAMINFO,
             'Vorbis': metadata.FLAC?.VORBISCOMMENT,
-            'ID3v2': metadata.ID3v2,
             'MPEG': metadata.MPEG,
             'ID3v1': metadata.ID3v1,
             'WAV': metadata.WAV,
@@ -922,9 +1526,39 @@ const Formatter = {
         for (const [section, data] of Object.entries(sections)) {
             if (data && Object.keys(data).length > 0) {
                 output += `---- ${section} ----\n`;
-                for (const [key, value] of Object.entries(data)) {
+                // Sort keys for consistent output order
+                const sortedKeys = Object.keys(data).sort((a, b) => {
+                    const priority = {
+                        'Version': 1,
+                        'Flags': 2,
+                        'Size': 3,
+                        'Title': 4,
+                        'Artist': 5,
+                        'Album': 6
+                    };
+                    const priorityA = priority[a] || 100;
+                    const priorityB = priority[b] || 100;
+                    if (priorityA !== priorityB) {
+                        return priorityA - priorityB;
+                    }
+                    return a.localeCompare(b);
+                });
+
+                for (const key of sortedKeys) {
+                    const value = data[key];
                     if (value !== undefined && value !== null && value !== '') {
-                        output += `${key.padEnd(30)}: ${value}\n`;
+                        if (typeof value === 'string' && value.includes('\n')) {
+                            // Handle multi-line values with proper indentation
+                            const lines = value.split('\n');
+                            output += `${key.padEnd(30)}: ${lines[0]}\n`;
+                            for (let i = 1; i < lines.length; i++) {
+                                if (lines[i].trim()) {
+                                    output += `${' '.repeat(30)}  ${lines[i]}\n`;
+                                }
+                            }
+                        } else {
+                            output += `${key.padEnd(30)}: ${value}\n`;
+                        }
                     }
                 }
                 output += '\n';
