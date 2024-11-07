@@ -202,20 +202,36 @@ async function parseOGG(arrayBuffer) {
     const data = {};
 
     // Basic OGG page header info
-    data['Version'] = view.getUint8(4);
-    data['HeaderType'] = view.getUint8(5);
+    data['VorbisVersion'] = view.getUint8(4);
+    data['AudioChannels'] = view.getUint8(5);
 
-    // Try to detect Vorbis content
+    // Basic Vorbis info from first page
     const pageSegments = view.getUint8(26);
-    const headerType = view.getUint8(27 + pageSegments);
-    if (headerType === 1) { // Vorbis identification header
-        const offset = 28 + pageSegments;
+    const offset = 27 + pageSegments;  // Base offset after segment table
+
+    // Check for Vorbis identification header
+    if (view.getUint8(offset) === 1) {
         data['VorbisVersion'] = view.getUint32(offset + 7, true);
         data['AudioChannels'] = view.getUint8(offset + 11);
         data['SampleRate'] = view.getUint32(offset + 12, true) + ' Hz';
-        data['BitRateMaximum'] = view.getInt32(offset + 16, true);
-        data['BitRateNominal'] = view.getInt32(offset + 20, true);
-        data['BitRateMinimum'] = view.getInt32(offset + 24, true);
+        data['BitRateNominal'] = Math.floor(view.getInt32(offset + 20, true) / 1000) + ' kbps';
+
+        // Look for vendor string in comment header
+        let pos = offset + 28;  // Skip vorbis header
+        while (pos < arrayBuffer.byteLength - 7) {
+            if (view.getUint8(pos) === 0x03 && view.getUint8(pos + 1) === 0x76) {  // Comment header
+                pos += 7;  // Skip packet type and "vorbis"
+                const vendorLength = view.getUint32(pos, true);
+                pos += 4;
+
+                if (vendorLength > 0 && pos + vendorLength <= arrayBuffer.byteLength) {
+                    const vendorBytes = new Uint8Array(arrayBuffer.slice(pos, pos + vendorLength));
+                    data['Vendor'] = new TextDecoder().decode(vendorBytes);
+                    break;
+                }
+            }
+            pos++;
+        }
     }
 
     return data;
