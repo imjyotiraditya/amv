@@ -1,0 +1,27 @@
+body {
+    font-family: monospace;
+    margin: 20px;
+}
+
+#dropZone {
+    border: 2px dashed #ccc;
+    padding: 20px;
+    margin: 20px 0;
+    text-align: center;
+    cursor: pointer;
+}
+
+#dropZone:hover {
+    background: #f5f5f5;
+}
+
+pre {
+    white-space: pre-wrap;
+    background: #f8f8f8;
+    padding: 10px;
+    border-radius: 4px;
+}
+
+.hidden {
+    display: none;
+}
