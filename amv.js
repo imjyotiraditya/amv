@@ -49,6 +49,117 @@ const ETCO_TYPES = {
     0x16: 'profanity end'
 };
 
+const VORBIS_COMMENT_KEYS = {
+    // Basic metadata
+    'TITLE': 'Title',
+    'ARTIST': 'Artist',
+    'ALBUM': 'Album',
+    'ALBUMARTIST': 'AlbumArtist',
+    'DATE': 'Date',
+    'YEAR': 'Year',
+    'GENRE': 'Genre',
+    'TRACKNUMBER': 'TrackNumber',
+    'TRACKTOTAL': 'TrackTotal',
+    'DISCNUMBER': 'DiscNumber',
+    'DISCTOTAL': 'DiscTotal',
+    'COMPOSER': 'Composer',
+    'CONDUCTOR': 'Conductor',
+    'PERFORMER': 'Performer',
+    'ENSEMBLE': 'Ensemble',
+    'PART': 'Part',
+    'PARTNUMBER': 'PartNumber',
+    'LOCATION': 'Location',
+
+    // Technical metadata
+    'ENCODER': 'Encoder',
+    'ENCODEDBY': 'EncodedBy',
+    'ENCODED_BY': 'EncodedBy',
+    'ENCODING': 'Encoding',
+    'ENCODERSETTINGS': 'EncoderSettings',
+    'LENGTH': 'Length',
+    'SAMPLERATE': 'SampleRate',
+    'CHANNELS': 'Channels',
+    'BPS': 'BitsPerSample',
+    'BITRATE': 'Bitrate',
+    'REPLAYGAIN_TRACK_GAIN': 'ReplayGainTrackGain',
+    'REPLAYGAIN_TRACK_PEAK': 'ReplayGainTrackPeak',
+    'REPLAYGAIN_ALBUM_GAIN': 'ReplayGainAlbumGain',
+    'REPLAYGAIN_ALBUM_PEAK': 'ReplayGainAlbumPeak',
+
+    // Additional metadata
+    'DESCRIPTION': 'Description',
+    'COMMENT': 'Comment',
+    'COPYRIGHT': 'Copyright',
+    'LICENSE': 'License',
+    'PUBLISHER': 'Publisher',
+    'ORGANIZATION': 'Organization',
+    'CONTACT': 'Contact',
+    'ISRC': 'ISRC',
+    'BARCODE': 'Barcode',
+    'CATALOGNUMBER': 'CatalogNumber',
+    'VERSION': 'Version',
+    'LANGUAGE': 'Language',
+    'SCRIPT': 'Script',
+    'RATING': 'Rating',
+
+    // Musical metadata
+    'KEY': 'Key',
+    'BPM': 'BeatsPerMinute',
+    'MOOD': 'Mood',
+    'LYRICS': 'Lyrics',
+    'LYRICIST': 'Lyricist',
+    'ARRANGER': 'Arranger',
+    'AUTHOR': 'Author',
+    'WRITER': 'Writer',
+    'SUBTITLE': 'Subtitle',
+    'MOVEMENT': 'Movement',
+    'MOVEMENTNUMBER': 'MovementNumber',
+    'MOVEMENTTOTAL': 'MovementTotal',
+
+    // Release metadata
+    'LABEL': 'Label',
+    'LABELNO': 'LabelNumber',
+    'OPUS': 'Opus',
+    'SOURCE': 'Source',
+    'RELEASETYPE': 'ReleaseType',
+    'RELEASESTATUS': 'ReleaseStatus',
+    'RELEASECOUNTRY': 'ReleaseCountry',
+    'SCRIPT': 'Script',
+    'MEDIA': 'Media',
+
+    // URLs and identifiers
+    'URL': 'URL',
+    'WEBSITE': 'Website',
+    'WOAS': 'Woas',
+    'EMAIL': 'Email',
+    'DISCID': 'DiscID',
+    'ASIN': 'ASIN',
+    'ISRC': 'ISRCNumber',
+    'MUSICBRAINZ_ARTISTID': 'MusicBrainzArtistID',
+    'MUSICBRAINZ_ALBUMID': 'MusicBrainzAlbumID',
+    'MUSICBRAINZ_ALBUMARTISTID': 'MusicBrainzAlbumArtistID',
+    'MUSICBRAINZ_RELEASEGROUPID': 'MusicBrainzReleaseGroupID',
+    'MUSICBRAINZ_RELEASETRACKID': 'MusicBrainzReleaseTrackID',
+    'MUSICBRAINZ_WORKID': 'MusicBrainzWorkID',
+
+    // Sorting metadata
+    'TITLESORT': 'TitleSort',
+    'ARTISTSORT': 'ArtistSort',
+    'ALBUMSORT': 'AlbumSort',
+    'ALBUMARTISTSORT': 'AlbumArtistSort',
+    'COMPOSERSORT': 'ComposerSort',
+
+    // Radio and streaming metadata
+    'RADIO': 'Radio',
+    'RADIOSTATION': 'RadioStation',
+    'RADIOOWNER': 'RadioOwner',
+    'PODCAST': 'Podcast',
+    'PODCASTURL': 'PodcastURL',
+    'EPISODE': 'Episode',
+    'EPISODETYPE': 'EpisodeType',
+    'SEASON': 'Season'
+}
+
 const UI = {
     dropZone: document.getElementById('dropZone'),
     fileInput: document.getElementById('fileInput'),
@@ -179,28 +290,92 @@ const Parsers = {
         const view = new DataView(arrayBuffer);
         const data = {};
 
-        data['VorbisVersion'] = view.getUint8(4);
-        data['AudioChannels'] = view.getUint8(5);
+        const decodeText = (buffer, start, length) => {
+            return new TextDecoder().decode(new Uint8Array(buffer.slice(start, start + length)));
+        };
 
+        const magic = String.fromCharCode(
+            view.getUint8(0),
+            view.getUint8(1),
+            view.getUint8(2),
+            view.getUint8(3)
+        );
+
+        if (magic !== 'OggS') {
+            throw new Error('Invalid OGG signature');
+        }
+
+        let offset = 0;
+        let pageSize = 0;
+
+        const version = view.getUint8(4);
+        const headerType = view.getUint8(5);
+        const granulePosition = view.getBigInt64(6, true);
+        const streamSerial = view.getUint32(14, true);
+        const pageSequence = view.getUint32(18, true);
+        const checksum = view.getUint32(22, true);
         const pageSegments = view.getUint8(26);
-        const offset = 27 + pageSegments;
 
-        if (view.getUint8(offset) === 1) {
+        offset = 27;
+        let totalLength = 0;
+        for (let i = 0; i < pageSegments; i++) {
+            totalLength += view.getUint8(offset + i);
+        }
+
+        offset += pageSegments;
+
+        if (view.getUint8(offset + 1) === 0x76 &&
+            view.getUint8(offset + 2) === 0x6f &&
+            view.getUint8(offset + 3) === 0x72 &&
+            view.getUint8(offset + 4) === 0x62 &&
+            view.getUint8(offset + 5) === 0x69 &&
+            view.getUint8(offset + 6) === 0x73) {
+
             data['VorbisVersion'] = view.getUint32(offset + 7, true);
             data['AudioChannels'] = view.getUint8(offset + 11);
             data['SampleRate'] = view.getUint32(offset + 12, true) + ' Hz';
-            data['BitRateNominal'] = Math.floor(view.getInt32(offset + 20, true) / 1000) + ' kbps';
+            data['BitRateMaximum'] = view.getInt32(offset + 16, true) + ' bps';
+            data['BitRateNominal'] = view.getInt32(offset + 20, true) + ' bps';
+            data['BitRateMinimum'] = view.getInt32(offset + 24, true) + ' bps';
 
-            let pos = offset + 28;
+            let pos = offset + totalLength;
             while (pos < arrayBuffer.byteLength - 7) {
-                if (view.getUint8(pos) === 0x03 && view.getUint8(pos + 1) === 0x76) {
+                if (view.getUint8(pos) === 0x03 &&
+                    view.getUint8(pos + 1) === 0x76 &&
+                    view.getUint8(pos + 2) === 0x6f) {
+
                     pos += 7;
                     const vendorLength = view.getUint32(pos, true);
                     pos += 4;
 
                     if (vendorLength > 0 && pos + vendorLength <= arrayBuffer.byteLength) {
-                        const vendorBytes = new Uint8Array(arrayBuffer.slice(pos, pos + vendorLength));
-                        data['Vendor'] = new TextDecoder().decode(vendorBytes);
+                        data['Vendor'] = decodeText(arrayBuffer, pos, vendorLength);
+
+                        pos += vendorLength;
+                        const commentListLength = view.getUint32(pos, true);
+                        pos += 4;
+
+                        for (let i = 0; i < commentListLength && pos < arrayBuffer.byteLength; i++) {
+                            const commentLength = view.getUint32(pos, true);
+                            pos += 4;
+
+                            if (pos + commentLength <= arrayBuffer.byteLength) {
+                                const comment = decodeText(arrayBuffer, pos, commentLength);
+                                const [key, ...valueParts] = comment.split('=');
+                                const value = valueParts.join('=');
+
+                                // Skip METADATA_BLOCK_PICTURE
+                                const upperKey = key.toUpperCase();
+                                if (upperKey !== 'METADATA_BLOCK_PICTURE') {
+                                    const mappedKey = VORBIS_COMMENT_KEYS[upperKey] || key;
+                                    if (value) {
+                                        data[mappedKey] = value;
+                                    }
+                                }
+
+                                pos += commentLength;
+                            }
+                        }
                         break;
                     }
                 }
@@ -297,25 +472,7 @@ const Parsers = {
                             const [key, ...valueParts] = commentString.split('=');
                             const value = valueParts.join('=');
 
-                            const keyMap = {
-                                'ALBUM': 'Album',
-                                'ARTIST': 'Artist',
-                                'ALBUMARTIST': 'Albumartist',
-                                'TITLE': 'Title',
-                                'DATE': 'Date',
-                                'GENRE': 'Genre',
-                                'TRACKNUMBER': 'TrackNumber',
-                                'DISCNUMBER': 'Discnumber',
-                                'COPYRIGHT': 'Copyright',
-                                'ENCODEDBY': 'Encodedby',
-                                'ENCODER': 'Encoder',
-                                'LYRICS': 'Lyrics',
-                                'ISRC': 'ISRCNumber',
-                                'COMMENT': 'Comment',
-                                'WOAS': 'Woas'
-                            };
-
-                            const mappedKey = keyMap[key.toUpperCase()];
+                            const mappedKey = VORBIS_COMMENT_KEYS[key.toUpperCase()];
                             if (value) {
                                 if (mappedKey != null) {
                                     data.VORBISCOMMENT[mappedKey] = value;
