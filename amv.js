@@ -1675,7 +1675,7 @@ const ButtonHandlers = {
             UI.copyBtn.textContent = 'Copied!';
             UI.copyBtn.classList.add('success');
             setTimeout(() => {
-                UI.copyBtn.textContent = 'Copy';
+                UI.copyBtn.textContent = 'Copy Output';
                 UI.copyBtn.classList.remove('success');
             }, 2000);
         } catch (err) {
