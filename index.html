@@ -1,22 +1,50 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <title>Audio Metadata Viewer</title>
-        <link rel="stylesheet" href="styles.css" />
-    </head>
-    <body>
-        <div class="header-controls">
-            <a href="https://github.com/imjyotiraditya/amv"
-                class="github-link">GitHub</a>
-            <button id="copyBtn" class="control-btn">Copy</button>
-            <button id="katbinBtn" class="control-btn">Copy to Katbin</button>
-        </div>
-        <div id="dropZone">Drop audio file here or click to select
-            <input type="file" id="fileInput" accept="audio/*" class="hidden">
-        </div>
-        <pre id="output">No file loaded</pre>
 
-        <script src="amv.js"></script>
-    </body>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Audio Metadata Viewer</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <header class="site-header">
+        <div class="header-content">
+            <div class="logo">
+                <h1>Audio Metadata Viewer</h1>
+                <p class="tagline">Modern Audio File Metadata Inspector</p>
+            </div>
+            <a href="https://github.com/imjyotiraditya/amv" target="_blank" rel="noopener noreferrer"
+                class="github-button">
+                View on GitHub
+            </a>
+        </div>
+    </header>
+
+    <div class="main-layout">
+        <div class="container">
+            <div class="controls">
+                <button id="copyBtn" class="btn-default">Copy Output</button>
+                <button id="katbinBtn" class="btn-default">Copy to Katbin</button>
+            </div>
+
+            <div id="dropZone" class="file-zone">
+                <p>Drop audio file here or click to select</p>
+                <input type="file" id="fileInput" accept="audio/*" class="hidden">
+                <button class="btn-default">Select File</button>
+            </div>
+
+            <div id="output" class="output-container">No file loaded</div>
+        </div>
+    </div>
+
+    <footer class="footer">
+        Made by <a href="https://github.com/imjyotiraditya" target="_blank" rel="noopener noreferrer">Jyotiraditya
+            Panda</a>
+    </footer>
+
+    <script src="amv.js"></script>
+</body>
+
 </html>
