@@ -356,7 +356,38 @@ const UI = {
     fileInput: document.getElementById('fileInput'),
     output: document.getElementById('output'),
     copyBtn: document.getElementById('copyBtn'),
-    katbinBtn: document.getElementById('katbinBtn')
+    katbinBtn: document.getElementById('katbinBtn'),
+
+    updateDropZone(file = null) {
+        const dropZone = this.dropZone;
+
+        if (!dropZone.querySelector('.initial-content')) {
+            const initialContent = document.createElement('div');
+            initialContent.className = 'initial-content';
+            initialContent.innerHTML = `
+                <p>Drop audio file here or click to select</p>
+                <button class="btn-default">Select File</button>
+            `;
+            dropZone.appendChild(initialContent);
+        }
+
+        if (!dropZone.querySelector('.compact-content')) {
+            const compactContent = document.createElement('div');
+            compactContent.className = 'compact-content';
+            compactContent.innerHTML = `
+                <p class="file-name"></p>
+                <button class="change-file-btn">Change File</button>
+            `;
+            dropZone.appendChild(compactContent);
+        }
+
+        if (file) {
+            dropZone.classList.add('compact');
+            dropZone.querySelector('.file-name').textContent = file.name;
+        } else {
+            dropZone.classList.remove('compact');
+        }
+    }
 };
 
 const Utils = {
@@ -1573,6 +1604,8 @@ const FileProcessor = {
         if (!file) return;
 
         try {
+            UI.updateDropZone(file);
+
             const metadata = {
                 'File': {
                     'FileName': file.name,
@@ -1702,6 +1735,11 @@ function initializeEventListeners() {
         UI.dropZone.classList.remove('highlight');
         EventHandlers.handleDrop(e);
     });
+    document.addEventListener('click', (e) => {
+        if (e.target.classList.contains('change-file-btn')) {
+            UI.fileInput.click();
+        }
+    });
 
     UI.dropZone.addEventListener('dragenter', () => UI.dropZone.classList.add('highlight'), false);
     UI.dropZone.addEventListener('dragover', () => UI.dropZone.classList.add('highlight'), false);
@@ -1716,6 +1754,8 @@ function initializeEventListeners() {
 
     UI.copyBtn.addEventListener('click', ButtonHandlers.handleCopyClick);
     UI.katbinBtn.addEventListener('click', ButtonHandlers.handleKatbinClick);
+
+    UI.updateDropZone();
 }
 
 initializeEventListeners();
