@@ -1691,33 +1691,30 @@ const ButtonHandlers = {
     async handleKatbinClick() {
         try {
             UI.katbinBtn.textContent = 'Copying...';
-            const response = await fetch('https://katb.in/api/paste', {
+            const response = await fetch('https://pastebin.koshikkumar17.workers.dev', {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    paste: {
-                        content: UI.output.textContent
-                    }
-                })
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ content: UI.output.textContent })
             });
-            const data = await response.json();
-            await navigator.clipboard.writeText(`https://katb.in/${data.id}`);
+            const text = (await response.text()).trim();
+            if (!response.ok || !text.startsWith('http')) {
+                throw new Error(text);
+            }
+            await navigator.clipboard.writeText(text);
             UI.katbinBtn.textContent = 'Copied URL!';
             UI.katbinBtn.classList.add('success');
         } catch (err) {
+            console.error(err);
             UI.katbinBtn.textContent = 'Error!';
             UI.katbinBtn.classList.add('error');
         } finally {
             setTimeout(() => {
-                UI.katbinBtn.textContent = 'Copy to Katbin';
+                UI.katbinBtn.textContent = 'Copy to Pastebin';
                 UI.katbinBtn.classList.remove('success', 'error');
             }, 2000);
         }
     }
 };
-
 function initializeEventListeners() {
     ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
         document.addEventListener(eventName, EventHandlers.preventDefaults, false);
